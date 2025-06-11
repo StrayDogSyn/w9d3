@@ -15,9 +15,12 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.utils import Bunch
+from typing import cast
 
 # Step 1: Load and inspect the breast cancer dataset
-data = load_breast_cancer()
+data: Bunch = cast(Bunch, load_breast_cancer())
+
 X = data.data
 y = data.target
 target_names = data.target_names  # ['malignant', 'benign']

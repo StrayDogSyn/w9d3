@@ -15,16 +15,24 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import label_binarize
+from sklearn.utils import Bunch
 
 # Step 1: Load and prepare the dataset
-iris = load_iris()
+iris_data = load_iris()
+# Handle potential tuple unpacking issue
+if isinstance(iris_data, tuple):
+    iris = iris_data[0]
+else:
+    iris = iris_data
+    
 X = iris.data
+y = iris.target
 
 # For binary classification, use only two classes: setosa vs versicolor
 # Class 0: setosa, Class 1: versicolor (skip virginica)
 # Filter for classes 0 and 1
-X = X[iris.target != 2]
-y = iris.target[iris.target != 2]
+X = X[y != 2]
+y = y[y != 2]
 
 # Step 2: Split into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(
