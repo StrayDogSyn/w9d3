@@ -1,0 +1,199 @@
+% Created 2025-06-11 Wed 16:07
+% Intended LaTeX compiler: pdflatex
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage[style=apa, backend=biber]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+\addbibresource{./refs/refs.bib}
+\AtEveryBibitem{\clearfield{note}}
+\usepackage{./jtc}
+\usetheme{default}
+\author{Evan Misshula}
+\date{\today}
+\title{Introduction to Machine Learning: Evaluation and Training Math Review}
+\hypersetup{
+ pdfauthor={Evan Misshula},
+ pdftitle={Introduction to Machine Learning: Evaluation and Training Math Review},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 29.3 (Org mode 9.6.15)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{What Is a Confusion Matrix?}
+\label{sec:org27ef0b7}
+\begin{frame}[label={sec:orgfbb8cd0}]{Definition}
+\begin{itemize}
+\item A \alert{confusion matrix} is a table that summarizes the performance of a classification model.
+\item It compares the predicted labels with the actual labels.
+\item Especially useful for binary or multiclass classification.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org384791a}]{Binary Confusion Matrix}
+\begin{center}
+\begin{tabular}{lll}
+ & Predicted Positive & Predicted Negative\\[0pt]
+\hline
+Actual Positive & True Positive (TP) & False Negative (FN)\\[0pt]
+Actual Negative & False Positive (FP) & True Negative (TN)\\[0pt]
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org0912c6d}]{Notation}
+Let:
+\begin{itemize}
+\item \(y_i \in \{0, 1\}\) be the true label
+\item \(\hat{y}_i \in \{0, 1\}\) be the predicted label
+\end{itemize}
+
+Then:
+\begin{itemize}
+\item TP: \(\sum \mathds{1}_{\{y_i = 1 \wedge \hat{y}_i = 1\}}\)
+\item TN: \(\sum \mathds{1}_{\{y_i = 0 \wedge \hat{y}_i = 0\}}\)
+\item FP: \(\sum \mathds{1}_{\{y_i = 0 \wedge \hat{y}_i = 1\}}\)
+\item FN: \(\sum \mathds{1}_{\{y_i = 1 \wedge \hat{y}_i = 0\}}\)
+\end{itemize}
+\end{frame}
+
+\section{Performance Metrics}
+\label{sec:orge876c59}
+\begin{frame}[label={sec:org62489d8}]{Accuracy}
+\[
+\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\]
+\begin{itemize}
+\item Proportion of total predictions that were correct.
+\item Best used when classes are balanced.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org23cdd64}]{Precision}
+\[
+\text{Precision} = \frac{TP}{TP + FP}
+\]
+\begin{itemize}
+\item Among predicted positives, how many were actually positive?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org426437c}]{Recall (Sensitivity, TPR)}
+\[
+\text{Recall} = \frac{TP}{TP + FN}
+\]
+\begin{itemize}
+\item Among actual positives, how many did we correctly predict?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org13cb68e}]{F1 Score}
+\[
+F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+\begin{itemize}
+\item Harmonic mean of precision and recall.
+\item Balances false positives and false negatives.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org163d67c}]{Specificity}
+\[
+\text{Specificity} = \frac{TN}{TN + FP}
+\]
+\begin{itemize}
+\item Among actual negatives, how many did we correctly predict?
+\end{itemize}
+\end{frame}
+
+\section{Multiclass Confusion Matrix}
+\label{sec:orgcdee63a}
+\begin{frame}[label={sec:org69dcda3}]{Generalization}
+\begin{itemize}
+\item For \(K\) classes, the confusion matrix is \(K \times K\)
+\item Entry \((i,j)\) is the number of times class \(i\) was predicted as class \(j\)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgd5f1001}]{Use Cases}
+\begin{itemize}
+\item Visualizing classifier performance
+\item Identifying types of errors
+\item Computing per-class precision and recall
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[label={sec:orge3fcd83}]{Key Takeaways for the Confusion Matrix}
+\begin{itemize}
+\item Confusion matrix is foundational for classifier evaluation.
+\item Metrics derived from it (precision, recall, F1) offer deeper insight than accuracy alone.
+\item Always inspect confusion matrices — especially on imbalanced datasets.
+\end{itemize}
+\end{frame}
+
+\section{ROC Curve}
+\label{sec:orge351a26}
+\begin{frame}[label={sec:orgf6cd047}]{Motivation}
+\begin{itemize}
+\item ROC AUC is a standard metric for evaluating binary classifiers.
+\item Focuses on ranking predictions rather than absolute accuracy.
+\item Especially useful with imbalanced data or when decision thresholds vary.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[label={sec:org5db1ab0}]{What Is the ROC Curve?}
+\end{frame}
+\section{ROC Curve}
+\label{sec:orgd02bce3}
+\begin{frame}[label={sec:orgf63fc57}]{What Is the ROC Curve?}
+\begin{itemize}
+\item \alert{Receiver Operating Characteristic (ROC) curve}:
+\begin{itemize}
+\item A graphical plot that shows the trade-off between \alert{True Positive Rate} (TPR) and \alert{False Positive Rate} (FPR).
+\end{itemize}
+\item The curve is constructed by \alert{sweeping a decision threshold} over the predicted probabilities output by the model.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org4fb32d4}]{Understanding the Threshold}
+\begin{itemize}
+\item Most classifiers (like logistic regression) output a probability score \(\hat{p} \in [0, 1]\).
+\item We need to decide: \alert{at what probability value do we say "yes, this is a positive"?}
+\item This cut-off value is called the \alert{threshold}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgd3db826}]{Example:}
+\begin{itemize}
+\item If threshold = 0.5:
+\begin{itemize}
+\item \(\hat{p} \geq 0.5 \Rightarrow\) predict \alert{positive}
+\item \(\hat{p} < 0.5 \Rightarrow\) predict \alert{negative}
+\end{itemize}
+\item Lowering the threshold means more predictions are labeled positive, increasing TPR but also increasing FPR.
+\item Raising the threshold means fewer predictions are labeled positive, which may reduce FPR but also lower TPR.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgf66081b}]{Each point on the ROC curve corresponds to:}
+\begin{itemize}
+\item A different threshold
+\item A pair \((\text{FPR}, \text{TPR})\) computed using that threshold
+\item Sweeping the threshold from 0 to 1 traces out the entire ROC curve
+\end{itemize}
+\end{frame}
+\end{document}

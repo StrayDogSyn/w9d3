@@ -1,0 +1,234 @@
+#+TITLE: Introduction to Machine Learning: Evaluation and Training Math Review 
+#+AUTHOR: Evan Misshula
+#+DATE: \today
+#+LANGUAGE: en
+
+#+LATEX_HEADER: \usepackage[style=apa, backend=biber]{biblatex}
+#+LATEX_HEADER: \DeclareLanguageMapping{american}{american-apa}
+#+LATEX_HEADER: \addbibresource{./refs/refs.bib}
+#+LATEX_HEADER: \AtEveryBibitem{\clearfield{note}}
+#+LATEX_HEADER: \usepackage{./jtc}
+#+STARTUP: beamer
+#+OPTIONS: H:2 toc:nil num:t
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectratio=169]
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+
+#+name: initialize_lang
+#+source: configuration
+#+begin_src emacs-lisp :results output :exports none
+    (require 'ob-mermaid)
+    (setq ob-mermaid-cli-path "/home/evan/.nvm/versions/node/v20.1.0/bin/mmdc")
+    ;; Doesn't work
+	       ;; first it is necessary to ensure that Org-mode loads support for the
+		;; languages used by code blocks in this article
+		(org-babel-do-load-languages
+		 'org-babel-load-languages
+		 '(
+		   (ditaa      . t)     
+		   (dot        . t)
+		   (emacs-lisp . t)
+		   (haskell    . t)
+		   (org        . t)
+		   (perl       . t)
+		   (python     . t)
+		   (R          . t)
+		   (ruby       . t)
+		   (plantuml   . t)
+		   (mermaid    . t)
+		   (sqlite     . t)))
+		;; then we'll remove the need to confirm evaluation of each code
+		;; block, NOTE: if you are concerned about execution of malicious code
+		;; through code blocks, then comment out the following line
+	    (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+	    (setq org-confirm-babel-evaluate nil)
+	      (setq org-ditaa-jar-path "/usr/bin/ditaa")
+	      (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+	      (add-to-list 'exec-path "/home/evan/.nvm/versions/node/v20.1.0/bin")
+	;;      (setq org-mermaid-jar-path "/home/evan/.nvm/versions/node/v20.1.0/lib/node_modules/@mermaid-js/mermaid-cli/node_modules/mermaid
+	;;    ")
+      (setenv "PATH" (concat (getenv "PATH") ":/home/evan/.nvm/versions/node/v20.1.0/bin"))
+      (add-to-list 'exec-path "/home/evan/.nvm/versions/node/v20.1.0/bin")
+
+	     (setenv "PUPPETEER_EXECUTABLE_PATH" "/usr/bin/google-chrome-stable")
+	     (setenv "PUPPETEER_DISABLE_SANDBOX" "1")
+    (setq org-babel-mermaid-cli-path "/home/evan/.nvm/versions/node/v20.1.0/bin/mmdc")
+
+(setq org-preview-latex-default-process 'dvipng)
+(setq org-preview-latex-process-alist
+      '((dvipng :programs ("latex" "dvipng")
+                :description "dvi > png using dvipng"
+                :message "You need to install latex and dvipng"
+                :image-input-type "dvi"
+                :image-output-type "png"
+                :image-size-adjust (1.0 . 1.0)
+                :latex-compiler ("latex -interaction nonstopmode -output-directory %o %f")
+                :image-converter ("dvipng -D 300 -T tight -o %O %f"))))
+
+(setq org-preview-latex-image-directory "ltximg/")
+
+      ;; Add LaTeX block template and scaling
+      (with-eval-after-load 'org
+	(add-to-list 'org-structure-template-alist '("e" . "latex"))
+	(plist-put org-format-latex-options :scale 3.0))
+
+
+	     (setenv "PATH" (concat "/home/evan/.nvm/versions/node/v20.1.0/bin:" (getenv "PATH")))
+	      ;; finally we'll customize the default behavior of Org-mode code blocks
+		;; so that they can be used to display examples of Org-mode syntax
+		(setf org-babel-default-header-args:org '((:exports . "code")))
+		(setq org-babel-inline-result-wrap '%s)
+		;; This gets rid of the wrapping around the results of evaluated org mode 
+		;; in line code
+		(setq reftex-default-bibliography '("/home/emisshula/proposal/mybib.bib"))
+		(setq org-latex-prefer-user-labels t)
+    ;;    (plist-put org-format-latex-options :scale 3.0)
+	(global-set-key (kbd "C-c e") 'insEq)
+#+end_src
+
+#+RESULTS: configuration
+
+
+* What Is a Confusion Matrix?
+** Definition                                                   :B_frame:
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+
+- A *confusion matrix* is a table that summarizes the performance of a classification model.
+- It compares the predicted labels with the actual labels.
+- Especially useful for binary or multiclass classification.
+
+** Binary Confusion Matrix                                      :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+
+|                | Predicted Positive | Predicted Negative |
+|----------------+--------------------+--------------------|
+| Actual Positive| True Positive (TP) | False Negative (FN)|
+| Actual Negative| False Positive (FP)| True Negative (TN) |
+
+** Notation
+Let:
+- \( y_i \in \{0, 1\} \) be the true label
+- \( \hat{y}_i \in \{0, 1\} \) be the predicted label
+
+Then:
+- TP: \( \sum \mathds{1}_{\{y_i = 1 \wedge \hat{y}_i = 1\}} \)
+- TN: \( \sum \mathds{1}_{\{y_i = 0 \wedge \hat{y}_i = 0\}} \)
+- FP: \( \sum \mathds{1}_{\{y_i = 0 \wedge \hat{y}_i = 1\}} \)
+- FN: \( \sum \mathds{1}_{\{y_i = 1 \wedge \hat{y}_i = 0\}} \)
+
+* Performance Metrics
+** Accuracy                                                         :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+\[
+\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\]
+- Proportion of total predictions that were correct.
+- Best used when classes are balanced.
+
+** Precision                                                        :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+\[
+\text{Precision} = \frac{TP}{TP + FP}
+\]
+- Among predicted positives, how many were actually positive?
+
+** Recall (Sensitivity, TPR)                                        :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+\[
+\text{Recall} = \frac{TP}{TP + FN}
+\]
+- Among actual positives, how many did we correctly predict?
+
+** F1 Score                                                         :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+\[
+F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+- Harmonic mean of precision and recall.
+- Balances false positives and false negatives.
+
+** Specificity
+\[
+\text{Specificity} = \frac{TN}{TN + FP}
+\]
+- Among actual negatives, how many did we correctly predict?
+
+* Multiclass Confusion Matrix
+** Generalization                                               :B_frame:
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+
+- For \( K \) classes, the confusion matrix is \( K \times K \)
+- Entry \( (i,j) \) is the number of times class \( i \) was predicted as class \( j \)
+
+** Use Cases                                                        :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+- Visualizing classifier performance
+- Identifying types of errors
+- Computing per-class precision and recall
+
+
+** Key Takeaways for the Confusion Matrix                           :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+- Confusion matrix is foundational for classifier evaluation.
+- Metrics derived from it (precision, recall, F1) offer deeper insight than accuracy alone.
+- Always inspect confusion matrices — especially on imbalanced datasets.
+
+* ROC Curve
+** Motivation
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+- ROC AUC is a standard metric for evaluating binary classifiers.
+- Focuses on ranking predictions rather than absolute accuracy.
+- Especially useful with imbalanced data or when decision thresholds vary.
+
+
+** What Is the ROC Curve?
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+* ROC Curve
+** What Is the ROC Curve?
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+- *Receiver Operating Characteristic (ROC) curve*:
+  - A graphical plot that shows the trade-off between *True Positive Rate* (TPR) and *False Positive Rate* (FPR).
+- The curve is constructed by *sweeping a decision threshold* over the predicted probabilities output by the model.
+
+** Understanding the Threshold
+- Most classifiers (like logistic regression) output a probability score \( \hat{p} \in [0, 1] \).
+- We need to decide: *at what probability value do we say "yes, this is a positive"?*
+- This cut-off value is called the *threshold*.
+
+** Example:
+- If threshold = 0.5:
+  - \( \hat{p} \geq 0.5 \Rightarrow \) predict *positive*
+  - \( \hat{p} < 0.5 \Rightarrow \) predict *negative*
+- Lowering the threshold means more predictions are labeled positive, increasing TPR but also increasing FPR.
+- Raising the threshold means fewer predictions are labeled positive, which may reduce FPR but also lower TPR.
+
+** Each point on the ROC curve corresponds to:
+- A different threshold
+- A pair \( (\text{FPR}, \text{TPR}) \) computed using that threshold
+- Sweeping the threshold from 0 to 1 traces out the entire ROC curve
+
+

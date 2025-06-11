@@ -1,0 +1,51 @@
+\mode<presentation>
+
+\usetheme[compress]{Singapore}
+\usecolortheme{seahorse}
+\usefonttheme{default}
+
+\setbeamertemplate{footline}[frame number]
+\beamertemplatenavigationsymbolsempty
+\usepackage{endnotes}
+\let\footnote=\endnote
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,
+            linkcolor=blue,
+            urlcolor=blue}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small\color{purple}}
+\newcommand{\lst}{\lstinline}
+
+\usepackage{graphicx}
+\usepackage{dsfont}
+%% So that pdf, png, and jpg are recognized as graphics files
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{pgf}
+
+%% Disable the bookmarks pane from opening in the PDF
+\hypersetup{pdfpagemode=UseNone}
+
+\newcommand{\red}{\color{red}}
+\newcommand{\orange}{\color{orange}}
+\newcommand{\blue}{\color{blue}}
+
+\newcommand{\bc}{\begin{center}}
+\newcommand{\ec}{\end{center}}
+\newcommand{\bn}{\begin{enumerate}}
+\newcommand{\en}{\end{enumerate}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\gh}{GitHub}
+\newcommand{\gs}{Git shell}
+
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\1}{\mathds{1}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\bbP}{\mathbb{P}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\coursedates}{Tuesday April 8th, 2025}
+
