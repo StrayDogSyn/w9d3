@@ -1,0 +1,8 @@
+#+Title: Week 9 Day 3 Repo for Review of Evaluation Mearsures
+
+
+* Contents
+
+This repo contains one presentation, lesson.pdf.  It also contains 3
+demos of classificatin live coding demos in the python directory.
+There is no breakout tonight.
